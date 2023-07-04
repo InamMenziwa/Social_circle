@@ -1,0 +1,93 @@
+{% include "header.html" %}
+{% import 'bootstrap/wtf.html' as wtf %}
+
+  <!-- Page Header -->
+<style>
+  .circle-button {
+    border-radius: 45%;
+    width: 40px;
+    height: 55px;
+  }
+</style>
+  <header class="masthead" style="background-image: url('{{post.img_url}}')">
+    <div class="overlay"></div>
+    <div class="container">
+      <div class="row">
+        <div class="col-lg-8 col-md-10 mx-auto">
+          <div class="post-heading">
+            <h1>{{post.title}}</h1>
+            <h2 class="subheading">{{post.subtitle}}</h2>
+            <span class="meta">Posted by
+              <a href="#">{{post.author.name}}</a>
+              on {{post.date}}</span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </header>
+
+  <!-- Post Content -->
+<article>
+  <div class="container">
+    <div class="row">
+      <div class="col-lg-8 col-md-10 mx-auto">
+        {{ post.body|safe }}
+        <hr>
+        {% if post.author.name == current_user.name: %}
+        <div class="clearfix">
+          <a class="btn btn-primary float-right" href="{{url_for('edit_post', post_id=post.id)}}">Edit Post</a>
+        </div>
+        {% endif %}
+
+
+        {% with messages = get_flashed_messages() %}
+        {% if messages %}
+        <ul class="commentList"> <!-- Move the opening ul tag here -->
+          {% for message in messages %}
+          <li class="alert alert-info alert-dismissible">
+            {{ message }}
+            <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+              <span aria-hidden="true">&times;</span>
+            </button>
+          </li>
+          {% endfor %}
+        </ul> <!-- Close the ul tag here -->
+        {% endif %}
+        {% endwith %}
+
+        <!-- Comments Area -->
+        {{ ckeditor.load() }}
+        {{ ckeditor.config(name='comment') }}
+        {{ wtf.quick_form(form, novalidate=True, button_map={"submit": "primary"}) }}
+        <div class="col-lg-8 col-md-10 mx-auto comment">
+          {% for comment in post.comments %}
+          <ul class="commentList">
+            <li>
+
+              <div class="commenterImage">
+              <img src="{{ comment.comment_author.email | gravatar }}"/>
+              </div>
+              <div class="commentText">
+                {{comment.text|safe}}
+                <span class="date sub-text">{{comment.comment_author.name}}</span>
+                {% if comment.comment_author.name == current_user.name: %}
+                <form action="{{ url_for('delete_com', id=comment.id, post_id=post.id)}}" method="post">
+                <span class="date sub-text"><button>X</button></span>
+                  </form>
+                  {% endif %}
+              </div>
+
+
+            </li>
+          </ul>
+
+          {% endfor %}
+        </div>
+      </div>
+    </div>
+  </div>
+</article>
+
+
+{% include "footer.html" %}
+
