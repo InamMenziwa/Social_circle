@@ -1,5 +1,5 @@
 from functools import wraps
-
+import os
 from flask import Flask, render_template, request, redirect, url_for, flash, abort
 from flask_bootstrap import Bootstrap
 from flask_ckeditor import CKEditor
@@ -10,15 +10,21 @@ from sqlalchemy.orm import relationship
 from flask_login import UserMixin, login_user as logu, LoginManager, login_required, current_user, logout_user as logou
 from forms import CreatePostForm, RegisterForm, LoginForm, Comment_of_user
 from flask_gravatar import Gravatar
+from dotenv import load_dotenv
+
+# Load environment variables from a .env file
 
 app = Flask(__name__)
-app.config['SECRET_KEY'] = '8BYkEfBA6O6donzWlSihBXox7C0sKR6b'
+load_dotenv()
+secret_key = os.environ.get("APP_SECRET_KEY")
+app.config['SECRET_KEY'] = secret_key
+
 gravatar = Gravatar(app, size=100, rating='g', default='retro', force_default=False, force_lower=False, use_ssl=False, base_url=None)
 ckeditor = CKEditor(app)
 Bootstrap(app)
 login_manager = LoginManager(app)
 ##CONNECT TO DB
-app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///blog.db'
+app.config['SQLALCHEMY_DATABASE_URI'] = os.environ.get("MY_DB_KEY")
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 db = SQLAlchemy(app)
 
@@ -71,9 +77,6 @@ class Comment(db.Model):
     post_id = db.Column(db.Integer, db.ForeignKey("blog_posts.id"))
     parent_post = relationship("BlogPost", back_populates="comments")
     text = db.Column(db.Text, nullable=False)
-
-
-
 
 @app.route('/')
 def get_all_posts():
