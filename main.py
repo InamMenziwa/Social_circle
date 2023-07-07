@@ -22,7 +22,7 @@ ckeditor = CKEditor(app)
 Bootstrap(app)
 login_manager = LoginManager(app)
 ##CONNECT TO DB
-app.config['SQLALCHEMY_DATABASE_URI'] = "postgresql://dbase_2wtb_user:TaHsBegFUwbQsrszMFIqqrLhDnVEvZGX@dpg-cii4p45gkuvojjeifte0-a.oregon-postgres.render.com/dbase_2wtb"
+app.config['SQLALCHEMY_DATABASE_URI'] = "postgresql://postmeohnana_user:58QO3kmPR2hsjcDwgZ97egSa28XU067y@dpg-cik10benqql0l1utd6jg-a.oregon-postgres.render.com/postmeohnana""
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 db = SQLAlchemy(app)
 
