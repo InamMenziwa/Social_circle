@@ -73,8 +73,6 @@ class Comment(db.Model):
     parent_post = relationship("BlogPost", back_populates="comments")
     text = db.Column(db.Text, nullable=False)
 
-app.app_context().push()
-db.create_all()
 
 @app.route('/')
 def get_all_posts():
