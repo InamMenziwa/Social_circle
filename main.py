@@ -12,7 +12,6 @@ from forms import CreatePostForm, RegisterForm, LoginForm, Comment_of_user
 from flask_gravatar import Gravatar
 
 
-# Load environment variables from a .env file
 
 app = Flask(__name__)
 app.config['SECRET_KEY'] = "8BYkEfBA6O6donzWlSihBXox7C0sKR6b"
@@ -73,6 +72,9 @@ class Comment(db.Model):
     post_id = db.Column(db.Integer, db.ForeignKey("blog_posts.id"))
     parent_post = relationship("BlogPost", back_populates="comments")
     text = db.Column(db.Text, nullable=False)
+
+app.app_context().push()
+db.create_all()
 
 @app.route('/')
 def get_all_posts():
